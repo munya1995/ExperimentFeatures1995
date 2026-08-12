@@ -10,34 +10,35 @@ step-up even on a trusted device.
 **Legend:** green = frictionless / success · orange = step-up & recovery · red = blocked
 
 ```mermaid
-flowchart TD
-    A([Open web app]) --> B[/Enter phone + PIN/]
-    B --> C{PIN correct?}
+%%{init: {'flowchart': {'nodeSpacing': 20, 'rankSpacing': 20}}}%%
+flowchart TB
+    A([Open]) --> B[/Phone + PIN/]
+    B --> C{PIN ok?}
 
-    C -- No --> C1{Attempts<br/>remaining?}
-    C1 -- Yes --> C2([&#8634; Back to PIN entry])
-    C1 -- No --> C3[Soft lockout &#183; cooldown]
-    C3 --> C4([&#8634; Retry after cooldown])
+    C -- No --> C1{Attempts left?}
+    C1 -- Yes --> C2([↺ Back to PIN])
+    C1 -- No --> C3[Soft lockout]
+    C3 --> C4([↺ Retry after cooldown])
 
-    C -- Yes --> D{Trusted device?<br/>within 5-day window}
+    C -- Yes --> D{Trusted device?}
 
-    D -- No / expired --> E[Send OTP to<br/>registered number]
-    E --> E1{OTP correct?}
-    E1 -- No --> E2([Resend rate-limited<br/>or account recovery])
-    E1 -- Yes --> T{Trust this device?}
-    T -- Yes, 5 days --> E3[Remember device 5 days<br/>+ notify user]
-    T -- Not now --> E4[Grant this session only<br/>OTP next login]
+    D -- No/expired --> E[Send OTP]
+    E --> E1{OTP ok?}
+    E1 -- No --> E2([Resend / recovery])
+    E1 -- Yes --> T{Trust device?}
+    T -- Yes --> E3[Remember 5d + notify]
+    T -- Not now --> E4[Session only]
     E3 --> F
     E4 --> F
 
-    D -- Yes --> F["READ session granted<br/>PIN + trusted device"]
+    D -- Yes --> F[READ session]
 
     F --> G{Action type?}
-    G -- View advice / log activity --> G1([Zero friction &#183; stay in READ])
-    G -- Update farm / change number / delete account --> H[Step-up MFA<br/>OTP or passkey]
+    G -- View --> G1([Zero friction])
+    G -- Update / Delete --> H[Step-up MFA]
     H --> H1{Verified?}
-    H1 -- No --> H2([Deny &#183; stay in READ])
-    H1 -- Yes --> H3([Commit action &#10003;<br/>then back to READ])
+    H1 -- No --> H2([Deny])
+    H1 -- Yes --> H3([Commit ✓])
 
     classDef happy fill:#dcefdd,stroke:#3f8b52,color:#173d24;
     classDef warn  fill:#fbe6d2,stroke:#cc7a3b,color:#5a3410;
