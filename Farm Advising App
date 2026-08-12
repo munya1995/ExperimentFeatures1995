@@ -11,13 +11,13 @@ flowchart TD
     B --> C{PIN correct?}
 
     C -- No --> C1{Attempts<br/>remaining?}
-    C1 -- Yes --> C2([&#8634; Back to PIN entry])
-    C1 -- No --> C3[Soft lockout &#183; cooldown]
-    C3 --> C4([&#8634; Retry after cooldown])
+    C1 -- Yes --> C2([↺ Back to PIN entry])
+    C1 -- No --> C3[Soft lockout · cooldown]
+    C3 --> C4([↺ Retry after cooldown])
 
     C -- Yes --> D{Trusted device?}
 
-    D -- No &#183; new device --> E[Send OTP to<br/>registered number]
+    D -- No · new device --> E[Send OTP to<br/>registered number]
     E --> E1{OTP correct?}
     E1 -- No --> E2([Resend rate-limited<br/>or account recovery])
     E1 -- Yes --> E3[Bind device<br/>+ notify user]
@@ -26,11 +26,11 @@ flowchart TD
     D -- Yes --> F["READ session granted<br/>PIN + trusted device"]
 
     F --> G{Action type?}
-    G -- View / log / update farm --> G1([Zero friction &#183; stay in READ])
+    G -- View / log / update farm --> G1([Zero friction · stay in READ])
     G -- Change number / delete account --> H[Step-up MFA<br/>OTP or passkey]
     H --> H1{Verified?}
-    H1 -- No --> H2([Deny &#183; stay in READ])
-    H1 -- Yes --> H3([Commit action &#10003;<br/>then back to READ])
+    H1 -- No --> H2([Deny · stay in READ])
+    H1 -- Yes --> H3([Commit action ✓<br/>then back to READ])
 
     classDef happy fill:#dcefdd,stroke:#3f8b52,color:#173d24;
     classDef warn  fill:#fbe6d2,stroke:#cc7a3b,color:#5a3410;
@@ -40,4 +40,4 @@ flowchart TD
     class C3,H2 block;
 ```
 
-**Also handled (kept out of the diagram to keep it clean):** forgot PIN → reset via OTP; lost SIM / number change → field-officer or knowledge-based recovery, then re-bind; session expiry → re-auth with PIN only (no OTP if the device is still trusted). Guardrails throughout: PIN attempt lockout, OTP rate-limiting, and an SMS alert whenever a new device is bound.
+**Also handled (kept out of the diagram to keep it clean):** forgot PIN → reset via OTP; lost SIM / number change → field-officer or knowledge-based recovery, then re-bind; session expiry → re-authenticate
